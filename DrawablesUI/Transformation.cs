@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.Caching;
 
 namespace DrawablesUI
 {
@@ -34,6 +35,31 @@ namespace DrawablesUI
             throw new NotImplementedException();
         }
 
-        public PointF this[PointF point] { get { throw new NotImplementedException(); } }
+
+        private readonly MemoryCache cache;
+
+
+        protected Transformation()
+        {
+            cache = new MemoryCache($"{GetType().Name}Cache");
+        }
+
+        public PointF this[PointF point] => Transformate(point);
+
+        public PointF Transformate(PointF point)
+        {
+            if (cache.Contains(point.ToString()))
+            {
+                return (PointF)cache.GetCacheItem(point.ToString()).Value;
+            }
+            point = GetPointF(point);
+            cache.Add(point.ToString(), point, DateTimeOffset.MaxValue);
+            return point;
+        }
+
+        private PointF GetPointF(PointF point)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
