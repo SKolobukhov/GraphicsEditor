@@ -53,6 +53,12 @@ namespace DrawablesUI
             graph.ResetTransform();
         }
 
+        public void StartDraw()
+        { }
+
+        public void EndDraw()
+        { }
+
         public void Dispose()
         {
             pen.Dispose();

@@ -9,5 +9,8 @@ namespace DrawablesUI
         void DrawLine(PointF start, PointF end);
         void DrawEllipseArc(PointF center, SizeF size, 
             float startAngle=0, float endAngle=360, float rotate=0);
+
+        void StartDraw();
+        void EndDraw();
     }
 }

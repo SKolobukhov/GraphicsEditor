@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="addShape\AddShapeCommand.cs" />
+    <Compile Include="listShape\Extensions.cs" />
     <Compile Include="utils\convertor\parsers\EllipseShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\LineShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\PointShapeParser.cs" />
