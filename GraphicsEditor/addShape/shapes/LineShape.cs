@@ -3,7 +3,7 @@ using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class LineShape: IDrawable
+    public class LineShape: IShape
     {
         public readonly PointF Start;
         public readonly PointF End;
@@ -18,6 +18,11 @@ namespace GraphicsEditor
         public void Draw(IDrawer drawer)
         {
             drawer.DrawLine(Start, End);
+        }
+
+        public void Transform(Transformation transformation)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

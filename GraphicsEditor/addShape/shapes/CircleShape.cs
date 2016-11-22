@@ -3,7 +3,7 @@ using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class CircleShape : IDrawable
+    public class CircleShape : IShape
     {
         private readonly PointF center;
         private readonly float radius;
@@ -17,6 +17,11 @@ namespace GraphicsEditor
         public void Draw(IDrawer drawer)
         {
             drawer.DrawEllipseArc(center, new SizeF(2*radius, 2*radius));
+        }
+
+        public void Transform(Transformation transformation)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

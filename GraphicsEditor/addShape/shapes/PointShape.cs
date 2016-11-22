@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class PointShape: IDrawable
+    public class PointShape: IShape
     {
-        public readonly PointF Position;
+        public PointF Position;
 
 
         public PointShape(PointF position)
@@ -16,6 +17,11 @@ namespace GraphicsEditor
         public void Draw(IDrawer drawer)
         {
             drawer.DrawPoint(Position);
+        }
+
+        public void Transform(Transformation transformation)
+        {
+            throw new NotImplementedException();
         }
     }
 }
