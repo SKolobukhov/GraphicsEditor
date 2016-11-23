@@ -1,14 +1,15 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class EllipseShape: IDrawable
+    public class EllipseShape: IShape
     {
         private readonly PointF center;
         private readonly SizeF size;
         private readonly float rotate;
-        
+        private Transformation trans = new Transformation();
 
         public EllipseShape(PointF center, SizeF size, float rotate)
         {
@@ -19,7 +20,12 @@ namespace GraphicsEditor
 
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawEllipseArc(center, size, 0, 360, rotate);
+            drawer.DrawEllipseArc(center, size, trans, 0, 360, rotate);
+        }
+
+        public void Transform(Transformation transformation)
+        {
+            trans.transformationMatrix.Multiply(transformation.transformationMatrix);
         }
     }
 }

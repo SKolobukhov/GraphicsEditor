@@ -6,19 +6,41 @@ namespace DrawablesUI
 {
     public class Transformation
     {
-        public static Transformation Rotate(float angle, PointF? point = null)
+        public readonly System.Drawing.Drawing2D.Matrix transformationMatrix;
+        private readonly MemoryCache cache;
+
+        public Transformation()
         {
-            throw new NotImplementedException();
+            transformationMatrix = new System.Drawing.Drawing2D.Matrix();
+            cache = new MemoryCache($"{GetType().Name}Cache");
+        }
+
+        public Transformation(System.Drawing.Drawing2D.Matrix matrix)
+        {
+            transformationMatrix = matrix;
+        }
+
+        public static Transformation Rotate(PointF point, float angle)
+        {
+            var tmpMatrix = new System.Drawing.Drawing2D.Matrix();
+            tmpMatrix.RotateAt(angle, point);
+            return new Transformation(tmpMatrix);
         }
 
         public static Transformation Translate(PointF point)
         {
-            throw new NotImplementedException();
+            var tmpMatrix = new System.Drawing.Drawing2D.Matrix();
+            tmpMatrix.Translate(point.X, point.Y);
+            return new Transformation(tmpMatrix);
         }
 
-        public static Transformation Scale(float scaleFactor, PointF? point = null)
+        public static Transformation Scale(PointF point, float scaleFactor)
         {
-            throw new NotImplementedException();
+            var tmpMatrix = new System.Drawing.Drawing2D.Matrix();
+            tmpMatrix.Translate(-point.X, -point.Y);
+            tmpMatrix.Scale(scaleFactor, scaleFactor);
+            tmpMatrix.Translate(point.X, point.Y);
+            return new Transformation(tmpMatrix);
         }
 
         public static Transformation Scale(PointF point1, PointF point2, float scaleFactor)
@@ -32,16 +54,9 @@ namespace DrawablesUI
 
         public static Transformation operator*(Transformation transformation1, Transformation transformation2)
         {
-            throw new NotImplementedException();
-        }
-
-
-        private readonly MemoryCache cache;
-
-
-        protected Transformation()
-        {
-            cache = new MemoryCache($"{GetType().Name}Cache");
+            var result = transformation1.transformationMatrix.Clone();
+            result.Multiply(transformation2.transformationMatrix);
+            return new Transformation(result);
         }
 
         public PointF this[PointF point] => Transformate(point);
@@ -52,7 +67,6 @@ namespace DrawablesUI
             {
                 return (PointF)cache.GetCacheItem(point.ToString()).Value;
             }
-            point = GetPointF(point);
             cache.Add(point.ToString(), point, DateTimeOffset.MaxValue);
             return point;
         }

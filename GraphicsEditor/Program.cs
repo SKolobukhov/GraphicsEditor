@@ -23,6 +23,9 @@ namespace GraphicsEditor
             app.AddCommand(new AddShapeCommand(picture, shapeProvider));
             app.AddCommand(new ListShapesCommand(picture));
             app.AddCommand(new RemoveShapeCommand(picture));
+            app.AddCommand(new ScaleShapeCommand(picture));
+            app.AddCommand(new RotateShapeCommand(picture));
+            app.AddCommand(new TranslateShapeCommand(picture));
 
             picture.Changed += ui.Refresh;
             ui.Start();

@@ -1,13 +1,14 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class LineShape: IDrawable
+    public class LineShape: IShape
     {
         public readonly PointF Start;
         public readonly PointF End;
-
+        private Transformation trans = new Transformation();
 
         public LineShape(PointF start, PointF end)
         {
@@ -17,7 +18,12 @@ namespace GraphicsEditor
         
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawLine(Start, End);
+            drawer.DrawLine(Start, End, trans);
+        }
+
+        public void Transform(Transformation transformation)
+        {
+            trans.transformationMatrix.Multiply(transformation.transformationMatrix);
         }
     }
 }

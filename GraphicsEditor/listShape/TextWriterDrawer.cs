@@ -10,6 +10,10 @@ namespace GraphicsEditor
         private readonly TextWriter writer;
         private int index;
 
+        ///
+        /// ОТОБРАЖЕНИЕ КООРДИНАТ ПОСЛЕ/ДО ПРЕОБРАЗОВАНИЙ
+        ///
+
         public TextWriterDrawer(TextWriter writer = null)
         {
             this.writer = writer ?? Console.Out;
@@ -22,19 +26,19 @@ namespace GraphicsEditor
             index = 0;
         }
 
-        public void DrawPoint(PointF point)
+        public void DrawPoint(PointF point, Transformation trans)
         {
             writer.WriteLine(index + ")" + ToString(point));
             index++;
         }
 
-        public void DrawLine(PointF start, PointF end)
+        public void DrawLine(PointF start, PointF end, Transformation trans)
         {
             writer.WriteLine($"{index})Линия({ToString(start)}, {ToString(end)})");
             index++;
         }
 
-        public void DrawEllipseArc(PointF center, SizeF sizes, float startAngle = 0, float endAngle = 360, float rotate = 0)
+        public void DrawEllipseArc(PointF center, SizeF sizes, Transformation trans, float startAngle = 0, float endAngle = 360, float rotate = 0)
         {
             if (Math.Abs(sizes.Width - sizes.Height) < 0.00001 && endAngle - startAngle >= 360)
             {

@@ -26,27 +26,35 @@ namespace DrawablesUI
             pointWidth = 2 * width / graph.PageScale;
         }
 
-        public void DrawPoint(PointF point)
+        public void DrawPoint(PointF point, Transformation trans)
         {
             using (var b = new SolidBrush(pen.Color))
             {
+                if (!trans.transformationMatrix.IsIdentity)
+                    graph.MultiplyTransform(trans.transformationMatrix);
                 graph.FillEllipse(b, new RectangleF(
                     new PointF(point.X - pointWidth / 2, point.Y - pointWidth / 2),
                     new SizeF(pointWidth, pointWidth)
                     ));
+                graph.ResetTransform();
             }
         }
 
-        public void DrawLine(PointF start, PointF end)
+        public void DrawLine(PointF start, PointF end, Transformation trans)
         {
+            if (!trans.transformationMatrix.IsIdentity)
+                graph.MultiplyTransform(trans.transformationMatrix);
             graph.DrawLine(pen, start, end);
+            graph.ResetTransform();
         }
 
-        public void DrawEllipseArc(PointF center, SizeF sizes, float startAngle = 0, float endAngle = 360, float rotate = 0)
+        public void DrawEllipseArc(PointF center, SizeF sizes, Transformation trans, float startAngle = 0, float endAngle = 360, float rotate = 0)
         {
             graph.TranslateTransform(center.X, center.Y);
             graph.RotateTransform(rotate);
             graph.TranslateTransform(-center.X, -center.Y);
+            if (!trans.transformationMatrix.IsIdentity)
+                graph.MultiplyTransform(trans.transformationMatrix);
             graph.DrawArc(pen, new RectangleF(
                 new PointF(center.X - sizes.Width / 2, center.Y - sizes.Height / 2), sizes
                 ), startAngle, endAngle);

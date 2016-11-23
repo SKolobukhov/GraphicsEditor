@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="addShape\AddShapeCommand.cs" />
+    <Compile Include="transformShape\TranslateShapeCommand.cs" />
+    <Compile Include="transformShape\RotateShapeCommand.cs" />
+    <Compile Include="transformShape\ScaleShapeCommand.cs" />
     <Compile Include="utils\convertor\parsers\EllipseShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\LineShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\PointShapeParser.cs" />

@@ -1,12 +1,14 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class CircleShape : IDrawable
+    public class CircleShape : IShape
     {
-        private readonly PointF center;
-        private readonly float radius;
+        private PointF center;
+        private float radius;
+        private Transformation trans = new Transformation();
 
         public CircleShape(PointF center, float radius)
         {
@@ -16,7 +18,12 @@ namespace GraphicsEditor
         
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawEllipseArc(center, new SizeF(2*radius, 2*radius));
+            drawer.DrawEllipseArc(center, new SizeF(2*radius, 2*radius), trans);
+        }
+
+        public void Transform(Transformation transformation)
+        {
+            trans.transformationMatrix.Multiply(transformation.transformationMatrix);
         }
     }
 }
