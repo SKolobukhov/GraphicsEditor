@@ -8,6 +8,7 @@ namespace GraphicsEditor
 {
     public class TextWriterDrawer : IDrawer, IDisposable
     {
+        private const int InitialValue = 0;
         private readonly TextWriter writer;
 
         private List<int> index;
@@ -22,7 +23,7 @@ namespace GraphicsEditor
 
         public void Reset()
         {
-            index = new List<int>(new[] { 1 });
+            index = new List<int>(new[] { InitialValue });
         }
 
         public void DrawPoint(PointF point)
@@ -62,7 +63,7 @@ namespace GraphicsEditor
         public void StartDraw()
         {
             writer.WriteLine(WriteIndex() + "Составная фигура");
-            index.Add(1);
+            index.Add(InitialValue);
         }
 
         public void EndDraw()
