@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="createGroup\CreateGroupCommand.cs" />
     <Compile Include="addShape\AddShapeCommand.cs" />
     <Compile Include="listShape\Extensions.cs" />
     <Compile Include="utils\convertor\parsers\EllipseShapeParser.cs" />

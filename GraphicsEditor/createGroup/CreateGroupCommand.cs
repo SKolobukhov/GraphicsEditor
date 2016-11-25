@@ -4,23 +4,23 @@ using ConsoleUI;
 
 namespace GraphicsEditor
 {
-    public class RemoveShapeCommand : ICommand
+    public class CreateGroupCommand: ICommand
     {
         private readonly Picture picture;
 
-        public RemoveShapeCommand(Picture picture)
+        public CreateGroupCommand(Picture picture)
         {
             this.picture = picture;
         }
 
-        public string Name => "remove";
-        public string Help => "удаление фигуры с картинки";
+        public string Name => "group";
+        public string Help => "Группировка фигур";
         public string Description => string.Empty;
-        public string[] Synonyms => new[] { "-" };
-        
+        public string[] Synonyms => new string[0];
+
         public void Execute(params string[] parameters)
         {
-            if (parameters == null || parameters.Length != 1)
+            if (parameters == null || parameters.Length < 1)
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters?.Length ?? 0}");
                 return;

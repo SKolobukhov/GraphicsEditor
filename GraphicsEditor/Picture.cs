@@ -1,60 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class Picture : IDrawable
+    public class Picture : CompoundShape
     {
-        private readonly List<IDrawable> shapes = new List<IDrawable>();
-        private readonly object lockObject = new object();
-
         public event Action Changed;
 
-        public void Remove(IDrawable shape)
+
+        public void Add(IShape shape)
         {
-            lock (lockObject)
-            {
-                shapes.Remove(shape);
-            }
+            Add(new[] { Shapes.Count }, shape);
         }
 
-        public void RemoveAt(int index)
+        public void Add(int[] indexs, IShape shape)
         {
-            lock (lockObject)
+            var index = indexs[indexs.Length - 1];
+            var compoundShape = indexs.Length < 2 ? this : GetShape(indexs.Take(indexs.Length - 1).ToArray()) as CompoundShape;
+            if (compoundShape == null || index < 0)
             {
-                shapes.RemoveAt(index);
-                if (Changed != null)
-                    Changed();
+                throw new ArgumentException($"Incorrect index {index}({indexs.Length - 1}) in [{string.Join(",", indexs).Trim(',')}]");
             }
+            index = index >= compoundShape.Shapes.Count ? compoundShape.Shapes.Count : index;
+            lock (locker)
+            {
+                compoundShape.Shapes.Insert(index, shape);
+            }
+            Changed?.Invoke();
         }
 
-        public void Add(IDrawable shape)
+        public void RemoveAt(int[] indexs)
         {
-            lock (lockObject)
+            var index = indexs[indexs.Length - 1];
+            var compoundShape = indexs.Length < 2 ? this : GetShape(indexs.Take(indexs.Length - 1).ToArray()) as CompoundShape;
+            if (compoundShape == null || index < 0 || index >= compoundShape.Shapes.Count)
             {
-                shapes.Add(shape);
-                if (Changed != null)
-                    Changed();
+                throw new ArgumentException($"Incorrect index {index}({indexs.Length - 1}) in [{string.Join(",", indexs).Trim(',')}]");
             }
+            lock (locker)
+            {
+                compoundShape.Shapes.RemoveAt(index);
+            }
+            Changed?.Invoke();
         }
 
-        public void Add(int index, IDrawable shape)
+        private IShape GetShape(int[] indexs)
         {
-            lock (lockObject)
+            CompoundShape compoundShape = this;
+            for (var level = 0; level < indexs.Length - 1; level++)
             {
-                shapes.Insert(index, shape);
-                if (Changed != null)
-                    Changed();
+                if (compoundShape == null || indexs[level] < 0 || indexs[level] >= compoundShape.Shapes.Count)
+                {
+                    throw new ArgumentException($"Incorrect index {indexs[level]}({level}) in [{string.Join(",", indexs).Trim(',')}]");
+                }
+                compoundShape = compoundShape.Shapes[indexs[level]] as CompoundShape;
             }
+            var index = indexs[indexs.Length - 1];
+            if (compoundShape == null || index < 0 || index >= compoundShape.Shapes.Count)
+            {
+                throw new ArgumentException($"Incorrect index {index}({indexs.Length - 1}) in [{string.Join(",", indexs).Trim(',')}]");
+            }
+            return compoundShape.Shapes[index];
         }
 
-        public void Draw(IDrawer drawer)
+        public new void Draw(IDrawer drawer)
         {
-            lock (lockObject)
+            lock (locker)
             {
-                foreach (var shape in shapes)
+                foreach (var shape in Shapes)
                 {
                     shape.Draw(drawer);
                 }
