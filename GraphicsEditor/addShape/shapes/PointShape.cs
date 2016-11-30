@@ -16,7 +16,8 @@ namespace GraphicsEditor
 
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawPoint(Position, trans);
+            drawer.SetTransform(trans);
+            drawer.DrawPoint(Position);
         }
 
         public void Transform(Transformation transformation)

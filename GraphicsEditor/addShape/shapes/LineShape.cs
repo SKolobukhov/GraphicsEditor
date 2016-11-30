@@ -18,7 +18,8 @@ namespace GraphicsEditor
         
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawLine(Start, End, trans);
+            drawer.SetTransform(trans);
+            drawer.DrawLine(Start, End);
         }
 
         public void Transform(Transformation transformation)

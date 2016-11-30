@@ -25,7 +25,7 @@ namespace GraphicsEditor
 
         public void Execute(params string[] parameters)
         {
-            if (parameters == null || !parameters.Any() || parameters.Length != 4)
+            if (parameters == null || !parameters.Any() || parameters.Length != 4) /// необходимость проверок
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
@@ -35,13 +35,12 @@ namespace GraphicsEditor
             var shapeIndex = Convertor.Convert<int>(parameters.Skip(3).ToArray());
             try
             {
-                
                 Transformation tmpTransformation = Transformation.Scale(scalePoint, scaleFactor);
                 picture.TransformAt(shapeIndex, tmpTransformation);
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"Невозможно удалить: {exception.Message}");
+                Console.WriteLine($"Невозможно выполнить масштабирование фигуры: {exception.Message}");
             }
         }
     }

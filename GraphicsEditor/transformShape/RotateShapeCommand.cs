@@ -25,7 +25,7 @@ namespace GraphicsEditor
 
         public void Execute(params string[] parameters)
         {
-            if (parameters == null || !parameters.Any() || parameters.Length != 4)
+            if (parameters == null || !parameters.Any() || parameters.Length != 4) /// необходимость проверок
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
@@ -41,7 +41,7 @@ namespace GraphicsEditor
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"Невозможно удалить: {exception.Message}");
+                Console.WriteLine($"Невозможно выполнить вращение фигуры: {exception.Message}");
             }
         }
     }

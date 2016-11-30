@@ -18,7 +18,8 @@ namespace GraphicsEditor
         
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawEllipseArc(center, new SizeF(2*radius, 2*radius), trans);
+            drawer.SetTransform(trans);
+            drawer.DrawEllipseArc(center, new SizeF(2*radius, 2*radius));
         }
 
         public void Transform(Transformation transformation)

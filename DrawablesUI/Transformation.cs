@@ -15,32 +15,32 @@ namespace DrawablesUI
             cache = new MemoryCache($"{GetType().Name}Cache");
         }
 
-        public Transformation(System.Drawing.Drawing2D.Matrix matrix)
+        private Transformation(System.Drawing.Drawing2D.Matrix matrix)
         {
             transformationMatrix = matrix;
         }
 
         public static Transformation Rotate(PointF point, float angle)
         {
-            var tmpMatrix = new System.Drawing.Drawing2D.Matrix();
-            tmpMatrix.RotateAt(angle, point);
-            return new Transformation(tmpMatrix);
+            var result = new System.Drawing.Drawing2D.Matrix();
+            result.RotateAt(angle, point);
+            return new Transformation(result);
         }
 
         public static Transformation Translate(PointF point)
         {
-            var tmpMatrix = new System.Drawing.Drawing2D.Matrix();
-            tmpMatrix.Translate(point.X, point.Y);
-            return new Transformation(tmpMatrix);
+            var result = new System.Drawing.Drawing2D.Matrix();
+            result.Translate(point.X, point.Y);
+            return new Transformation(result);
         }
 
         public static Transformation Scale(PointF point, float scaleFactor)
         {
-            var tmpMatrix = new System.Drawing.Drawing2D.Matrix();
-            tmpMatrix.Translate(-point.X, -point.Y);
-            tmpMatrix.Scale(scaleFactor, scaleFactor);
-            tmpMatrix.Translate(point.X, point.Y);
-            return new Transformation(tmpMatrix);
+            var result = new System.Drawing.Drawing2D.Matrix();
+            result.Translate(-point.X, -point.Y);
+            result.Scale(scaleFactor, scaleFactor);
+            result.Translate(point.X, point.Y);
+            return new Transformation(result);
         }
 
         public static Transformation Scale(PointF point1, PointF point2, float scaleFactor)
@@ -59,7 +59,7 @@ namespace DrawablesUI
             return new Transformation(result);
         }
 
-        public PointF this[PointF point] => Transformate(point);
+        public PointF this[PointF point] => Transformate(point); ///Возвращает то, что нужно?
 
         public PointF Transformate(PointF point)
         {
@@ -69,11 +69,6 @@ namespace DrawablesUI
             }
             cache.Add(point.ToString(), point, DateTimeOffset.MaxValue);
             return point;
-        }
-
-        private PointF GetPointF(PointF point)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace DrawablesUI
         private readonly Graphics graph;
         private float pointWidth;
         private Pen pen;
+        private Transformation trans = new Transformation();
 
         public GraphicsDrawer(Graphics g)
         {
@@ -19,6 +20,12 @@ namespace DrawablesUI
             g.SmoothingMode = SmoothingMode.AntiAlias;
             SelectPen(Color.Black);
         }
+
+        public void SetTransform(Transformation trans)
+        {
+            this.trans = trans;
+        }
+
         public void SelectPen(Color color, int width = 1)
         {
             pen?.Dispose();
@@ -26,7 +33,7 @@ namespace DrawablesUI
             pointWidth = 2 * width / graph.PageScale;
         }
 
-        public void DrawPoint(PointF point, Transformation trans)
+        public void DrawPoint(PointF point)
         {
             using (var b = new SolidBrush(pen.Color))
             {
@@ -40,7 +47,7 @@ namespace DrawablesUI
             }
         }
 
-        public void DrawLine(PointF start, PointF end, Transformation trans)
+        public void DrawLine(PointF start, PointF end)
         {
             if (!trans.transformationMatrix.IsIdentity)
                 graph.MultiplyTransform(trans.transformationMatrix);
@@ -48,7 +55,7 @@ namespace DrawablesUI
             graph.ResetTransform();
         }
 
-        public void DrawEllipseArc(PointF center, SizeF sizes, Transformation trans, float startAngle = 0, float endAngle = 360, float rotate = 0)
+        public void DrawEllipseArc(PointF center, SizeF sizes, float startAngle = 0, float endAngle = 360, float rotate = 0)
         {
             graph.TranslateTransform(center.X, center.Y);
             graph.RotateTransform(rotate);

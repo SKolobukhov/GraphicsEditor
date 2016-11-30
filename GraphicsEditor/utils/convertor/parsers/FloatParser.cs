@@ -11,7 +11,7 @@ namespace GraphicsEditor
             float value;
             if (!float.TryParse(args[0], out value))
             {
-                throw new ApplicationException($"Неверный параметр \"{args[0]}\"");
+                throw new ApplicationException($"Неверный параметр \"{args[0]}\""); /// todo: Парсинг точки и запятой
             }
             return value;
         }

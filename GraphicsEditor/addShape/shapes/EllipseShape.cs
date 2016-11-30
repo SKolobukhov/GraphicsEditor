@@ -20,7 +20,8 @@ namespace GraphicsEditor
 
         public void Draw(IDrawer drawer)
         {
-            drawer.DrawEllipseArc(center, size, trans, 0, 360, rotate);
+            drawer.SetTransform(trans);
+            drawer.DrawEllipseArc(center, size, 0, 360, rotate);
         }
 
         public void Transform(Transformation transformation)
