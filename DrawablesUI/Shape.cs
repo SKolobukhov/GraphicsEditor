@@ -15,8 +15,13 @@ namespace DrawablesUI
 
         public virtual void Draw(IDrawer drawer)
         {
-            var lastMatrix = drawer.Transform;
-            drawer.Transform = transformation.Matrix;
+            var lastMatrix = drawer.Transform ?? Transformation.Default.Matrix;
+            if (!transformation.Matrix.IsIdentity)
+            {
+                var matrix = lastMatrix.Clone();
+                matrix.Multiply(transformation.Matrix);
+                drawer.Transform = matrix;
+            }
             DrawShape(drawer);
             drawer.Transform = lastMatrix;
         }
