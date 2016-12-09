@@ -12,25 +12,17 @@ namespace GraphicsEditor
         private const int InitialValue = 0;
         private readonly TextWriter writer;
 
-        private List<int> index;
+        private readonly List<int> index;
 
-        public Matrix Transform { get; set; }
+        public Matrix Transform { get; set; } = Transformation.Default.Matrix;
 
         public TextWriterDrawer(TextWriter writer = null)
         {
             this.writer = writer ?? Console.Out;
-            Reset();
+            index = new List<int> {InitialValue};
         }
         public void SelectPen(Color color, int width = 1)
         { }
-
-        public void SetTransform(Transformation transformation)
-        { }
-
-        public void Reset()
-        {
-            index = new List<int>(new[] { InitialValue });
-        }
 
         public void DrawPoint(PointF point)
         {

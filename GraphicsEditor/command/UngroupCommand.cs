@@ -1,4 +1,4 @@
-п»їusing System;
+using System;
 using System.Linq;
 using ConsoleUI;
 
@@ -14,7 +14,7 @@ namespace GraphicsEditor
         }
 
         public string Name => "ungroup";
-        public string Help => "Р Р°Р·РіСЂСѓРїРїРёСЂРѕРІРєР° С„РёРіСѓСЂС‹";
+        public string Help => "Разгруппировка фигуры";
         public string Description => string.Empty;
         public string[] Synonyms => new string[0];
 
@@ -22,23 +22,23 @@ namespace GraphicsEditor
         {
             if (parameters.Length != 1)
             {
-                Console.WriteLine($"РќРµРІРµСЂРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂР°РјРµС‚СЂРѕРІ: {parameters.Length}");
+                Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
             }
 
             try
             {
-                var compoundShape = picture.GetShape(parameters[0]) as CompoundShape;
+                var compoundShape = picture.GetShapeByIndex(parameters[0]) as CompoundShape;
                 if (compoundShape == null)
                 {
-                    throw new ApplicationException($"The shape ({parameters[0]}) is not group");
+                    throw new ApplicationException($"Выбранная фигура({parameters[0]}) - не составная");
                 }
                 picture.Remove(parameters[0]);
                 picture.Add(compoundShape.Shapes.ToArray());
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"РќРµРІРѕР·РјРѕР¶РЅРѕ СЂР°Р·РіСЂСѓРїРїРёСЂРѕРІР°С‚СЊ: {exception.Message}");
+                Console.WriteLine($"Невозможно разгруппировать: {exception.Message}");
             }
         }
     }

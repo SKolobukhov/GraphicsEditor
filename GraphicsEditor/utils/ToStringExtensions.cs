@@ -2,7 +2,7 @@
 
 namespace GraphicsEditor
 {
-    public static class Extensions
+    public static class ToStringExtensions
     {
         public static string ToStringPosition(this PointF point)
         {

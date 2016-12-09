@@ -28,7 +28,7 @@ namespace GraphicsEditor
 
             try
             {
-                var shapes = parameters.Select(parameter => picture.GetShape(parameter));
+                var shapes = parameters.Select(parameter => picture.GetShapeByIndex(parameter));
                 var group = new CompoundShape(shapes);
                 picture.Remove(parameters);
                 picture.Add(group);

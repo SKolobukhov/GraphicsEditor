@@ -22,7 +22,7 @@ namespace GraphicsEditor
 
         public void Execute(params string[] parameters)
         {
-            if (parameters == null || !parameters.Any() || parameters.Length != 4) /// необходимость проверок
+            if (parameters.Length != 4)
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
@@ -34,9 +34,7 @@ namespace GraphicsEditor
                 var rotationAngle = Convertor.Convert<float>(parameters.Skip(2).Take(1).ToArray());
                 var shapeIndex = parameters.Last();
                 var transformation = Transformation.Rotate(rotatePoint, rotationAngle);
-                var shape = picture.GetShape(shapeIndex);
-                shape.Transform(transformation);
-                picture.Redraw();
+                picture.Transform(shapeIndex, transformation);
             }
             catch (Exception exception)
             {

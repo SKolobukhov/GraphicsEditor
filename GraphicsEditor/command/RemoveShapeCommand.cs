@@ -15,7 +15,7 @@ namespace GraphicsEditor
         public string Name => "remove";
         public string Help => "удаление фигуры с картинки";
         public string Description => string.Empty;
-        public string[] Synonyms => new[] { "-" };
+        public string[] Synonyms => new[] { "-", "rm" };
         
         public void Execute(params string[] parameters)
         {

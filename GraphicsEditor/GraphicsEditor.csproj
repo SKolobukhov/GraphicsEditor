@@ -49,7 +49,7 @@
     <Compile Include="shapes\CompoundShape.cs" />
     <Compile Include="command\GroupCommand.cs" />
     <Compile Include="command\AddShapeCommand.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="utils\ToStringExtensions.cs" />
     <Compile Include="command\TranslateShapeCommand.cs" />
     <Compile Include="command\RotateShapeCommand.cs" />
     <Compile Include="command\ScaleShapeCommand.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="utils\convertor\parsers\SizeFParser.cs" />
     <Compile Include="utils\convertor\parsers\StringParser.cs" />
     <Compile Include="command\RemoveShapeCommand.cs" />
-    <Compile Include="TextWriterDrawer.cs" />
+    <Compile Include="utils\TextWriterDrawer.cs" />
     <Compile Include="shapes\CircleShape.cs" />
     <Compile Include="shapes\EllipseShape.cs" />
     <Compile Include="shapes\LineShape.cs" />

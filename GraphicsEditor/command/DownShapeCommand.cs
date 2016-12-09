@@ -13,7 +13,7 @@ namespace GraphicsEditor
         }
 
         public string Name => "down";
-        public string Help => "Опустиь фигурy";
+        public string Help => "Опустить фигурy";
         public string Description => string.Empty;
         public string[] Synonyms => new string[0];
 
@@ -31,7 +31,7 @@ namespace GraphicsEditor
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"Невозможно опустиь фигурy: {exception.Message}");
+                Console.WriteLine($"Невозможно опустить фигурy: {exception.Message}");
             }
         }
     }
