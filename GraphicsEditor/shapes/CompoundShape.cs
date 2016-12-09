@@ -28,16 +28,5 @@ namespace GraphicsEditor
                 drawer.EndDraw();
             }
         }
-
-        public override void Transform(Transformation transformation)
-        {
-            lock (locker)
-            {
-                foreach (var shape in Shapes)
-                {
-                    shape.Transform(transformation);
-                }
-            }
-        }
     }
 }

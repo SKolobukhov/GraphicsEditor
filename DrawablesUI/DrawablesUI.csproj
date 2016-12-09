@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompoundShape.cs" />
     <Compile Include="DrawableGUI.cs" />
     <Compile Include="GraphicsDrawer.cs" />
     <Compile Include="IDrawable.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using DrawablesUI;
 
@@ -12,6 +13,8 @@ namespace GraphicsEditor
         private readonly TextWriter writer;
 
         private List<int> index;
+
+        public Matrix Transform { get; set; }
 
         public TextWriterDrawer(TextWriter writer = null)
         {

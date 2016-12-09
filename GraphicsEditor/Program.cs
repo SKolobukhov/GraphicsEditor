@@ -27,6 +27,9 @@ namespace GraphicsEditor
             app.AddCommand(new UngroupCommand(picture));
             app.AddCommand(new UpShapeCommand(picture));
             app.AddCommand(new DownShapeCommand(picture));
+            app.AddCommand(new ScaleShapeCommand(picture));
+            app.AddCommand(new RotateShapeCommand(picture));
+            app.AddCommand(new TranslateShapeCommand(picture));
 
             picture.Changed += ui.Refresh;
             ui.Start();

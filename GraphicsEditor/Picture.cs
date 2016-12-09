@@ -14,6 +14,11 @@ namespace GraphicsEditor
             Add(shapes.Select(shape => new Tuple<string, Shape>(string.Empty, shape)).ToArray());
         }
 
+        public void Redraw()
+        {
+            Changed?.Invoke();
+        }
+
         public void Add(params Tuple<string, Shape>[] shapes)
         {
             foreach (var shape in shapes)

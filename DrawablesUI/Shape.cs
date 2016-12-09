@@ -15,9 +15,10 @@ namespace DrawablesUI
 
         public virtual void Draw(IDrawer drawer)
         {
-            drawer.SetTransform(transformation);
+            var lastMatrix = drawer.Transform;
+            drawer.Transform = transformation.Matrix;
             DrawShape(drawer);
-            drawer.SetTransform(Transformation.Invert(transformation));
+            drawer.Transform = lastMatrix;
         }
 
         protected abstract void DrawShape(IDrawer drawer);

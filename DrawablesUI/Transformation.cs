@@ -47,14 +47,6 @@ namespace DrawablesUI
             return new Transformation(matrix);
         }
 
-        public static Transformation Invert(Transformation transformation)
-        {
-            var matrix = transformation.Matrix.Clone();
-            matrix.Invert();
-            return new Transformation(matrix);
-        }
-
-
         public readonly Matrix Matrix;
 
         private Transformation(Matrix matrix)

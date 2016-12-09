@@ -1,13 +1,14 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace DrawablesUI
 {
     public interface IDrawer
     {
+        Matrix Transform { get; set; }
+
         void SelectPen(Color color, int width=1);
-
-        void SetTransform(Transformation transformation);
-
+        
         void DrawPoint(PointF point);
         void DrawLine(PointF start, PointF end);
         void DrawEllipseArc(PointF center, SizeF size, 
