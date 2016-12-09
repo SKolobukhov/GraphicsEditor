@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DrawablesUI;
 
-namespace DrawablesUI
+namespace GraphicsEditor
 {
     public class CompoundShape : Shape
     {
@@ -15,7 +16,7 @@ namespace DrawablesUI
             Shapes = shapes?.ToList() ?? new List<Shape>();
         }
 
-        public override void Draw(IDrawer drawer)
+        protected override void DrawShape(IDrawer drawer)
         {
             lock (locker)
             {
@@ -26,11 +27,6 @@ namespace DrawablesUI
                 }
                 drawer.EndDraw();
             }
-        }
-
-        protected override void DrawShape(IDrawer drawer)
-        {
-            throw new System.NotImplementedException();
         }
 
         public override void Transform(Transformation transformation)

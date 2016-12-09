@@ -3,7 +3,7 @@ using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class EllipseShape: IShape
+    public class EllipseShape: Shape
     {
         private readonly PointF center;
         private readonly SizeF size;
@@ -17,14 +17,9 @@ namespace GraphicsEditor
             this.rotate = rotate;
         }
 
-        public void Draw(IDrawer drawer)
+        protected override void DrawShape(IDrawer drawer)
         {
             drawer.DrawEllipseArc(center, size, 0, 360, rotate);
-        }
-
-        public void Transform(Transformation transformation)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

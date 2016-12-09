@@ -6,10 +6,10 @@ namespace GraphicsEditor
 {
     public class ShapeProvider
     {
-        private readonly Dictionary<string, Func<string[], IShape>> bindings = new Dictionary<string, Func<string[], IShape>>();
+        private readonly Dictionary<string, Func<string[], Shape>> bindings = new Dictionary<string, Func<string[], Shape>>();
 
         public ShapeProvider Bind<T>(string shapeName)
-            where T : IShape
+            where T : Shape
         {
             if (bindings.ContainsKey(shapeName))
             {
@@ -19,7 +19,7 @@ namespace GraphicsEditor
             return this;
         }
 
-        public IShape GetShape(string shapeName, params string[] parameters)
+        public Shape GetShape(string shapeName, params string[] parameters)
         {
             if (bindings.ContainsKey(shapeName))
             {

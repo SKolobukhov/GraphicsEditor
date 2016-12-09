@@ -1,4 +1,5 @@
-﻿using ConsoleUI;
+﻿using System;
+using ConsoleUI;
 
 namespace GraphicsEditor
 {
@@ -18,6 +19,12 @@ namespace GraphicsEditor
 
         public void Execute(params string[] parameters)
         {
+            if (parameters.Length != 0)
+            {
+                Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
+                return;
+            }
+
             picture.Draw(new TextWriterDrawer());
         }
     }

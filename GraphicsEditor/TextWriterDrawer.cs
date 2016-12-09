@@ -21,6 +21,9 @@ namespace GraphicsEditor
         public void SelectPen(Color color, int width = 1)
         { }
 
+        public void SetTransform(Transformation transformation)
+        { }
+
         public void Reset()
         {
             index = new List<int>(new[] { InitialValue });

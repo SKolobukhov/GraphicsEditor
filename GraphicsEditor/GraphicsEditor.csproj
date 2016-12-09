@@ -42,14 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="createGroup\CreateGroupCommand.cs" />
-    <Compile Include="addShape\AddShapeCommand.cs" />
-    <Compile Include="listShape\Extensions.cs" />
+    <Compile Include="command\DownShapeCommand.cs" />
+    <Compile Include="command\UpShapeCommand.cs" />
+    <Compile Include="command\UngroupCommand.cs" />
+    <Compile Include="shapes\CompoundShape.cs" />
+    <Compile Include="command\GroupCommand.cs" />
+    <Compile Include="command\AddShapeCommand.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="utils\convertor\parsers\EllipseShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\LineShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\PointShapeParser.cs" />
     <Compile Include="utils\EnumerableExtensions.cs" />
-    <Compile Include="listShape\ListShapesCommand.cs" />
+    <Compile Include="command\ListShapesCommand.cs" />
     <Compile Include="utils\convertor\parsers\CircleShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\DoubleParser.cs" />
     <Compile Include="utils\convertor\parsers\FloatParser.cs" />
@@ -59,14 +63,14 @@
     <Compile Include="utils\convertor\parsers\PointFParser.cs" />
     <Compile Include="utils\convertor\parsers\SizeFParser.cs" />
     <Compile Include="utils\convertor\parsers\StringParser.cs" />
-    <Compile Include="removeShape\RemoveShapeCommand.cs" />
-    <Compile Include="listShape\TextWriterDrawer.cs" />
-    <Compile Include="addShape\shapes\CircleShape.cs" />
-    <Compile Include="addShape\shapes\EllipseShape.cs" />
-    <Compile Include="addShape\shapes\LineShape.cs" />
+    <Compile Include="command\RemoveShapeCommand.cs" />
+    <Compile Include="TextWriterDrawer.cs" />
+    <Compile Include="shapes\CircleShape.cs" />
+    <Compile Include="shapes\EllipseShape.cs" />
+    <Compile Include="shapes\LineShape.cs" />
     <Compile Include="utils\convertor\Convertor.cs" />
     <Compile Include="Picture.cs" />
-    <Compile Include="addShape\shapes\PointShape.cs" />
+    <Compile Include="shapes\PointShape.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="utils\ShapeProvider.cs" />

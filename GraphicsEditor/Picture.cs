@@ -1,52 +1,132 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class Picture : CompoundShape
+    public sealed class Picture : CompoundShape
     {
         public event Action Changed;
 
-
-        public void Add(IShape shape)
+        public void Add(params Shape[] shapes)
         {
-            Add(new[] { Shapes.Count }, shape);
+            Add(shapes.Select(shape => new Tuple<string, Shape>(string.Empty, shape)).ToArray());
         }
 
-        public void Add(int[] indexs, IShape shape)
+        public void Add(params Tuple<string, Shape>[] shapes)
         {
-            var index = indexs[indexs.Length - 1];
-            var compoundShape = indexs.Length < 2 ? this : GetShape(indexs.Take(indexs.Length - 1).ToArray()) as CompoundShape;
-            if (compoundShape == null || index < 0)
+            foreach (var shape in shapes)
             {
-                throw new ArgumentException($"Incorrect index {index}({indexs.Length - 1}) in [{string.Join(",", indexs).Trim(',')}]");
-            }
-            index = index >= compoundShape.Shapes.Count ? compoundShape.Shapes.Count : index;
-            lock (locker)
-            {
-                compoundShape.Shapes.Insert(index, shape);
+                var compoundShape = GetShape(shape.Item1) as CompoundShape;
+                if (compoundShape == null)
+                {
+                    throw new ArgumentException($"The shape({shape.Item1}) is not compound");
+                }
+                compoundShape.Shapes.Add(shape.Item2);
             }
             Changed?.Invoke();
         }
 
-        public void RemoveAt(int[] indexs)
+        public void Remove(params string[] shapeNames)
         {
-            var index = indexs[indexs.Length - 1];
-            var compoundShape = indexs.Length < 2 ? this : GetShape(indexs.Take(indexs.Length - 1).ToArray()) as CompoundShape;
-            if (compoundShape == null || index < 0 || index >= compoundShape.Shapes.Count)
+            var shapesMap = GetShapesMap();
+            foreach (var shapeName in shapeNames)
             {
-                throw new ArgumentException($"Incorrect index {index}({indexs.Length - 1}) in [{string.Join(",", indexs).Trim(',')}]");
-            }
-            lock (locker)
-            {
-                compoundShape.Shapes.RemoveAt(index);
+                if (!shapeName.StartsWith("[") || !shapeName.EndsWith("]"))
+                {
+                    throw new ApplicationException($"Incorrect format: \"{shapeName}\"");
+                }
+                var path = shapeName.Substring(1, shapeName.Length - 2);
+                if (!shapesMap.ContainsKey(path))
+                {
+                    throw new ApplicationException($"Shape by path \"{shapeName}\" not found");
+                }
+                var shapeToDelete = shapesMap[path];
+                var separatorIndex = path.LastIndexOf(":", StringComparison.OrdinalIgnoreCase);
+                path = string.Empty;
+                if (separatorIndex != -1)
+                {
+                    path = path.Substring(0, separatorIndex - 1);
+                }
+                var compoundShape = (CompoundShape)shapesMap[path];
+                compoundShape.Shapes.Remove(shapeToDelete);
             }
             Changed?.Invoke();
         }
 
-        private IShape GetShape(int[] indexs)
+        public void Move(string shapeName, int offset)
         {
+            var shape = GetShape(shapeName);
+            var path = shapeName.Substring(1, shapeName.Length - 2);
+            var separatorIndex = path.LastIndexOf(":", StringComparison.OrdinalIgnoreCase);
+            path = string.Empty;
+            if (separatorIndex != -1)
+            {
+                path = path.Substring(0, separatorIndex - 1);
+            }
+            var compoundShape = (CompoundShape)GetShape(string.IsNullOrEmpty(path) ? string.Empty : "[" + path + "]");
+            Remove(shapeName);
+            var index = compoundShape.Shapes.IndexOf(shape) + offset;
+            index = Math.Max(0, Math.Min(compoundShape.Shapes.Count, index));
+            compoundShape.Shapes.Insert(index, shape);
+            Changed?.Invoke();
+        }
+
+        private Dictionary<string, Shape> GetShapesMap()
+        {
+            var result = new Dictionary<string, Shape> { { string.Empty, this } };
+            GetShapesMap(result, string.Empty, this);
+            return result;
+        }
+
+        private void GetShapesMap(Dictionary<string, Shape> map, string prefix, CompoundShape compoundShape)
+        {
+            for (var index = 0; index < compoundShape.Shapes.Count; index++)
+            {
+                var path = prefix + (string.IsNullOrEmpty(prefix) ? string.Empty : ":") + index;
+                var shape = compoundShape.Shapes[index];
+                map.Add(path, shape);
+                var cShape = shape as CompoundShape;
+                if (cShape != null)
+                {
+                    GetShapesMap(map, path, cShape);
+                }
+            }
+        }
+
+        private int[] GetIndexs(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return new int[0];
+            }
+            var args = path.TrimStart('[').TrimEnd(']').Split(':');
+            var indexs = new List<int>();
+            foreach (var arg in args)
+            {
+                int index;
+                if (!int.TryParse(arg, out index))
+                {
+                    throw new ApplicationException($"Failed to parse path \"{path}\"");
+                }
+                indexs.Add(index);
+            }
+            return indexs.ToArray();
+        }
+
+        public Shape GetShape(string path)
+        {
+            var indexs = GetIndexs(path);
+            return GetShape(indexs);
+        }
+
+        public Shape GetShape(int[] indexs)
+        {
+            if (indexs == null || !indexs.Any())
+            {
+                return this;
+            }
             CompoundShape compoundShape = this;
             for (var level = 0; level < indexs.Length - 1; level++)
             {
@@ -64,7 +144,7 @@ namespace GraphicsEditor
             return compoundShape.Shapes[index];
         }
 
-        public new void Draw(IDrawer drawer)
+        protected override void DrawShape(IDrawer drawer)
         {
             lock (locker)
             {

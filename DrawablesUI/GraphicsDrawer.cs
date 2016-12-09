@@ -26,6 +26,11 @@ namespace DrawablesUI
             pointWidth = 2 * width / graph.PageScale;
         }
 
+        public void SetTransform(Transformation transformation)
+        {
+            graph.Transform = transformation.Matrix;
+        }
+
         public void DrawPoint(PointF point)
         {
             using (var b = new SolidBrush(pen.Color))

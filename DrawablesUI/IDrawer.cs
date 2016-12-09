@@ -5,6 +5,9 @@ namespace DrawablesUI
     public interface IDrawer
     {
         void SelectPen(Color color, int width=1);
+
+        void SetTransform(Transformation transformation);
+
         void DrawPoint(PointF point);
         void DrawLine(PointF start, PointF end);
         void DrawEllipseArc(PointF center, SizeF size, 

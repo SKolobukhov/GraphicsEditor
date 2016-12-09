@@ -1,24 +1,34 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.Caching;
+using System.Drawing.Drawing2D;
 
 namespace DrawablesUI
 {
     public class Transformation
     {
-        public static Transformation Rotate(float angle, PointF? point = null)
+        public static Transformation Default => new Transformation(new Matrix());
+
+        public static Transformation Rotate(PointF point, float angle)
         {
-            throw new NotImplementedException();
+            var result = new Matrix();
+            result.RotateAt(angle, point);
+            return new Transformation(result);
         }
 
         public static Transformation Translate(PointF point)
         {
-            throw new NotImplementedException();
+            var matrix = new Matrix();
+            matrix.Translate(point.X, point.Y);
+            return new Transformation(matrix);
         }
 
-        public static Transformation Scale(float scaleFactor, PointF? point = null)
+        public static Transformation Scale(PointF point, float scaleFactor)
         {
-            throw new NotImplementedException();
+            var result = new Matrix();
+            result.Translate(-point.X, -point.Y);
+            result.Scale(scaleFactor, scaleFactor);
+            result.Translate(point.X, point.Y);
+            return new Transformation(result);
         }
 
         public static Transformation Scale(PointF point1, PointF point2, float scaleFactor)
@@ -30,36 +40,26 @@ namespace DrawablesUI
             throw new NotImplementedException();
         }
 
-        public static Transformation operator*(Transformation transformation1, Transformation transformation2)
+        public static Transformation operator *(Transformation transformation1, Transformation transformation2)
         {
-            throw new NotImplementedException();
+            var matrix = transformation1.Matrix.Clone();
+            matrix.Multiply(transformation2.Matrix);
+            return new Transformation(matrix);
+        }
+
+        public static Transformation Invert(Transformation transformation)
+        {
+            var matrix = transformation.Matrix.Clone();
+            matrix.Invert();
+            return new Transformation(matrix);
         }
 
 
-        private readonly MemoryCache cache;
+        public readonly Matrix Matrix;
 
-
-        protected Transformation()
+        private Transformation(Matrix matrix)
         {
-            cache = new MemoryCache($"{GetType().Name}Cache");
-        }
-
-        public PointF this[PointF point] => Transformate(point);
-
-        public PointF Transformate(PointF point)
-        {
-            if (cache.Contains(point.ToString()))
-            {
-                return (PointF)cache.GetCacheItem(point.ToString()).Value;
-            }
-            point = GetPointF(point);
-            cache.Add(point.ToString(), point, DateTimeOffset.MaxValue);
-            return point;
-        }
-
-        private PointF GetPointF(PointF point)
-        {
-            throw new NotImplementedException();
+            Matrix = matrix;
         }
     }
 }

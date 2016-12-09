@@ -47,7 +47,7 @@
     <Compile Include="GraphicsDrawer.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="IDrawer.cs" />
-    <Compile Include="IShape.cs" />
+    <Compile Include="Shape.cs" />
     <Compile Include="Transformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

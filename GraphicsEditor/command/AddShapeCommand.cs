@@ -22,10 +22,12 @@ namespace GraphicsEditor
 
         public void Execute(params string[] parameters)
         {
-            if (parameters == null || !parameters.Any())
+            if (parameters.Length < 1)
             {
+                Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
             }
+
             var shapeName = parameters.First();
             parameters = parameters.Skip(1).ToArray();
             try
