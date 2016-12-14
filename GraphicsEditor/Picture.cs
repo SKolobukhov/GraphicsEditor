@@ -134,7 +134,7 @@ namespace GraphicsEditor
             return compoundShape.Shapes[index];
         }
 
-        protected override void DrawShape(IDrawer drawer)
+        public override void Draw(IDrawer drawer)
         {
             lock (locker)
             {

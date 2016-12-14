@@ -1,33 +1,47 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Runtime.Caching;
 
 namespace DrawablesUI
 {
     public class Transformation
     {
-        public static Transformation Default => new Transformation(new Matrix());
+        public readonly System.Drawing.Drawing2D.Matrix transformationMatrix;
+
+        public PointF this[PointF point] => Transform(point);
+
+        public Vector this[Vector vector] => Transform(vector);
+
+        public Transformation()
+        {
+            transformationMatrix = new System.Drawing.Drawing2D.Matrix();
+        }
+
+        private Transformation(System.Drawing.Drawing2D.Matrix matrix)
+        {
+            transformationMatrix = matrix;
+        }
 
         public static Transformation Rotate(PointF point, float angle)
         {
-            var result = new Matrix();
+            var result = new System.Drawing.Drawing2D.Matrix();
             result.RotateAt(angle, point);
             return new Transformation(result);
         }
 
         public static Transformation Translate(PointF point)
         {
-            var matrix = new Matrix();
-            matrix.Translate(point.X, point.Y);
-            return new Transformation(matrix);
+            var result = new System.Drawing.Drawing2D.Matrix();
+            result.Translate(point.X, point.Y);
+            return new Transformation(result);
         }
 
         public static Transformation Scale(PointF point, float scaleFactor)
         {
-            var result = new Matrix();
-            result.Translate(-point.X, -point.Y);
-            result.Scale(scaleFactor, scaleFactor);
+            var result = new System.Drawing.Drawing2D.Matrix();
             result.Translate(point.X, point.Y);
+            result.Scale(scaleFactor, scaleFactor);
+            result.Translate(-point.X, -point.Y);
             return new Transformation(result);
         }
 
@@ -37,21 +51,31 @@ namespace DrawablesUI
             {
                 throw new InvalidOperationException();
             }
-            throw new NotImplementedException();
+            var rotateFactor = Math.Atan((point1.X - point2.X) / (point1.Y - point2.Y));
+            var result = new System.Drawing.Drawing2D.Matrix();
+            throw new InvalidOperationException();
         }
-
-        public static Transformation operator *(Transformation transformation1, Transformation transformation2)
+        
+        public static Transformation operator*(Transformation transformation1, Transformation transformation2)
         {
-            var matrix = transformation1.Matrix.Clone();
-            matrix.Multiply(transformation2.Matrix);
-            return new Transformation(matrix);
+            var result = transformation1.transformationMatrix.Clone();
+            result.Multiply(transformation2.transformationMatrix);
+            return new Transformation(result);
         }
 
-        public readonly Matrix Matrix;
-
-        private Transformation(Matrix matrix)
+        private Vector Transform(Vector vector)
         {
-            Matrix = matrix;
+            var result = new PointF[1] { vector.value };
+            transformationMatrix.TransformVectors(result);
+            return Vector.ToVector(result[0]);
         }
+
+        private PointF Transform(PointF point)
+        {
+            var result = new PointF[1] { point };
+            transformationMatrix.TransformPoints(result);
+            return result[0];
+        }
+
     }
 }

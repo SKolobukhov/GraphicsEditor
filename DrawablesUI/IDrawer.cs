@@ -5,8 +5,6 @@ namespace DrawablesUI
 {
     public interface IDrawer
     {
-        Matrix Transform { get; set; }
-
         void SelectPen(Color color, int width=1);
         
         void DrawPoint(PointF point);

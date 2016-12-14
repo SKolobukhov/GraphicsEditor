@@ -5,33 +5,15 @@ namespace DrawablesUI
     public abstract class Shape: IDrawable
     {
         private readonly Guid id;
-        private Transformation transformation;
 
         protected Shape()
         {
             id = Guid.NewGuid();
-            transformation = Transformation.Default;
         }
 
-        public virtual void Draw(IDrawer drawer)
-        {
-            var lastMatrix = drawer.Transform ?? Transformation.Default.Matrix;
-            if (!transformation.Matrix.IsIdentity)
-            {
-                var matrix = lastMatrix.Clone();
-                matrix.Multiply(transformation.Matrix);
-                drawer.Transform = matrix;
-            }
-            DrawShape(drawer);
-            drawer.Transform = lastMatrix;
-        }
+        public virtual void Draw(IDrawer drawer){}
 
-        protected abstract void DrawShape(IDrawer drawer);
-
-        public virtual void Transform(Transformation transformation)
-        {
-            this.transformation *= transformation;
-        }
+        public virtual void Transform(Transformation transformation){}
 
         public override bool Equals(object obj)
         {

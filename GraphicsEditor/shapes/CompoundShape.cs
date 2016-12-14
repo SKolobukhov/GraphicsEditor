@@ -16,7 +16,7 @@ namespace GraphicsEditor
             Shapes = shapes?.ToList() ?? new List<Shape>();
         }
 
-        protected override void DrawShape(IDrawer drawer)
+        public override void Draw(IDrawer drawer)
         {
             lock (locker)
             {
@@ -26,6 +26,17 @@ namespace GraphicsEditor
                     shape.Draw(drawer);
                 }
                 drawer.EndDraw();
+            }
+        }
+
+        public override void Transform(Transformation transformation)
+        {
+            lock (locker)
+            {
+                foreach (var shape in Shapes)
+                {
+                    shape.Transform(transformation);
+                }
             }
         }
     }

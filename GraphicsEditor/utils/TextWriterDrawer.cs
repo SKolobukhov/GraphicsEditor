@@ -14,8 +14,6 @@ namespace GraphicsEditor
 
         private readonly List<int> index;
 
-        public Matrix Transform { get; set; } = Transformation.Default.Matrix;
-
         public TextWriterDrawer(TextWriter writer = null)
         {
             this.writer = writer ?? Console.Out;

@@ -10,12 +10,6 @@ namespace DrawablesUI
         private float pointWidth;
         private Pen pen;
 
-        public Matrix Transform
-        {
-            get { return graph.Transform; }
-            set { graph.Transform = value; }
-        }
-
         public GraphicsDrawer(Graphics g)
         {
             graph = g;
