@@ -6,9 +6,8 @@ namespace GraphicsEditor
 {
     public class LineShape: IShape
     {
-        public readonly PointF Start;
-        public readonly PointF End;
-        private Transformation trans = new Transformation();
+        public PointF Start;
+        public PointF End;
 
         public LineShape(PointF start, PointF end)
         {
@@ -18,13 +17,13 @@ namespace GraphicsEditor
         
         public void Draw(IDrawer drawer)
         {
-            drawer.SetTransform(trans);
             drawer.DrawLine(Start, End);
         }
 
         public void Transform(Transformation transformation)
         {
-            trans.transformationMatrix.Multiply(transformation.transformationMatrix);
+            Start = transformation[Start];
+            End = transformation[End];
         }
     }
 }

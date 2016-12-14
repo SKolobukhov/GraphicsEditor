@@ -9,7 +9,6 @@ namespace DrawablesUI
         private readonly Graphics graph;
         private float pointWidth;
         private Pen pen;
-        private Transformation trans = new Transformation();
 
         public GraphicsDrawer(Graphics g)
         {
@@ -19,11 +18,6 @@ namespace DrawablesUI
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.SmoothingMode = SmoothingMode.AntiAlias;
             SelectPen(Color.Black);
-        }
-
-        public void SetTransform(Transformation trans)
-        {
-            this.trans = trans;
         }
 
         public void SelectPen(Color color, int width = 1)
@@ -37,22 +31,16 @@ namespace DrawablesUI
         {
             using (var b = new SolidBrush(pen.Color))
             {
-                if (!trans.transformationMatrix.IsIdentity)
-                    graph.MultiplyTransform(trans.transformationMatrix);
                 graph.FillEllipse(b, new RectangleF(
                     new PointF(point.X - pointWidth / 2, point.Y - pointWidth / 2),
                     new SizeF(pointWidth, pointWidth)
                     ));
-                graph.ResetTransform();
             }
         }
 
         public void DrawLine(PointF start, PointF end)
         {
-            if (!trans.transformationMatrix.IsIdentity)
-                graph.MultiplyTransform(trans.transformationMatrix);
             graph.DrawLine(pen, start, end);
-            graph.ResetTransform();
         }
 
         public void DrawEllipseArc(PointF center, SizeF sizes, float startAngle = 0, float endAngle = 360, float rotate = 0)
@@ -60,8 +48,6 @@ namespace DrawablesUI
             graph.TranslateTransform(center.X, center.Y);
             graph.RotateTransform(rotate);
             graph.TranslateTransform(-center.X, -center.Y);
-            if (!trans.transformationMatrix.IsIdentity)
-                graph.MultiplyTransform(trans.transformationMatrix);
             graph.DrawArc(pen, new RectangleF(
                 new PointF(center.X - sizes.Width / 2, center.Y - sizes.Height / 2), sizes
                 ), startAngle, endAngle);

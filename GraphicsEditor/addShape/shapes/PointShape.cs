@@ -6,8 +6,7 @@ namespace GraphicsEditor
 {
     public class PointShape: IShape
     {
-        public readonly PointF Position;
-        private Transformation trans = new Transformation();
+        public PointF Position;
 
         public PointShape(PointF position)
         {
@@ -16,13 +15,12 @@ namespace GraphicsEditor
 
         public void Draw(IDrawer drawer)
         {
-            drawer.SetTransform(trans);
             drawer.DrawPoint(Position);
         }
 
         public void Transform(Transformation transformation)
         {
-            trans.transformationMatrix.Multiply(transformation.transformationMatrix);
+            Position = transformation[Position];
         }
     }
 }

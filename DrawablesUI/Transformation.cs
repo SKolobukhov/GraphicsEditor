@@ -7,12 +7,14 @@ namespace DrawablesUI
     public class Transformation
     {
         public readonly System.Drawing.Drawing2D.Matrix transformationMatrix;
-        private readonly MemoryCache cache;
+
+        public PointF this[PointF point] => Transform(point);
+
+        public Vector this[Vector vector] => Transform(vector);
 
         public Transformation()
         {
             transformationMatrix = new System.Drawing.Drawing2D.Matrix();
-            cache = new MemoryCache($"{GetType().Name}Cache");
         }
 
         private Transformation(System.Drawing.Drawing2D.Matrix matrix)
@@ -37,9 +39,9 @@ namespace DrawablesUI
         public static Transformation Scale(PointF point, float scaleFactor)
         {
             var result = new System.Drawing.Drawing2D.Matrix();
-            result.Translate(-point.X, -point.Y);
-            result.Scale(scaleFactor, scaleFactor);
             result.Translate(point.X, point.Y);
+            result.Scale(scaleFactor, scaleFactor);
+            result.Translate(-point.X, -point.Y);
             return new Transformation(result);
         }
 
@@ -49,9 +51,11 @@ namespace DrawablesUI
             {
                 throw new InvalidOperationException();
             }
-            throw new NotImplementedException();
+            var rotateFactor = Math.Atan((point1.X - point2.X) / (point1.Y - point2.Y));
+            var result = new System.Drawing.Drawing2D.Matrix();
+            result.Translate();
         }
-
+        
         public static Transformation operator*(Transformation transformation1, Transformation transformation2)
         {
             var result = transformation1.transformationMatrix.Clone();
@@ -59,16 +63,19 @@ namespace DrawablesUI
             return new Transformation(result);
         }
 
-        public PointF this[PointF point] => Transformate(point); ///Возвращает то, что нужно?
-
-        public PointF Transformate(PointF point)
+        private Vector Transform(Vector vector)
         {
-            if (cache.Contains(point.ToString()))
-            {
-                return (PointF)cache.GetCacheItem(point.ToString()).Value;
-            }
-            cache.Add(point.ToString(), point, DateTimeOffset.MaxValue);
-            return point;
+            var result = new PointF[1] { vector.value };
+            transformationMatrix.TransformVectors(result);
+            return Vector.ToVector(result[0]);
         }
+
+        private PointF Transform(PointF point)
+        {
+            var result = new PointF[1] { point };
+            transformationMatrix.TransformPoints(result);
+            return result[0];
+        }
+
     }
 }
