@@ -6,12 +6,12 @@ namespace GraphicsEditor
     {
         public static string ToStringPosition(this PointF point)
         {
-            return $"Точка({point.X}, {point.Y})";
+            return $"Точка({point.X}; {point.Y})";
         }
 
         public static string ToStringSize(this SizeF size)
         {
-            return $"Размеры({size.Width}, {size.Height})";
+            return $"Размеры({size.Width}; {size.Height})";
         }
     }
 }
