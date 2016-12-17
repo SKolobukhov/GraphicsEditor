@@ -9,7 +9,7 @@ namespace GraphicsEditor
     {
         public event Action Changed;
 
-        public void Add(params Shape[] shapes)
+        public void Add(params IShape[] shapes)
         {
             shapes.ForEach(shape => Shapes.Add(shape));
             Changed?.Invoke();
@@ -61,21 +61,28 @@ namespace GraphicsEditor
             var lastSeparatorIndex = shapeIndex.LastIndexOf(":", StringComparison.OrdinalIgnoreCase);
             shapeIndex = lastSeparatorIndex != -1 ? shapeIndex.Substring(0, lastSeparatorIndex) : string.Empty;
             var compoundShape = (CompoundShape)GetShapeByIndex(shapeIndex);
-            compoundShape.Shapes.Remove(shape);
             var index = compoundShape.Shapes.IndexOf(shape) + offset;
+            compoundShape.Shapes.Remove(shape);
             index = Math.Max(0, Math.Min(compoundShape.Shapes.Count, index));
-            compoundShape.Shapes.Insert(index, shape);
+            if (compoundShape.Shapes.Count == index)
+            {
+                compoundShape.Shapes.Add(shape);
+            }
+            else
+            {
+                compoundShape.Shapes.Insert(index, shape);
+            }
             Changed?.Invoke();
         }
 
-        private Dictionary<string, Shape> GetShapeIndexsMap()
+        private Dictionary<string, IShape> GetShapeIndexsMap()
         {
-            var result = new Dictionary<string, Shape> { { string.Empty, this } };
+            var result = new Dictionary<string, IShape> { { string.Empty, this } };
             GetShapeIndexsMap(result, string.Empty, this);
             return result;
         }
 
-        private void GetShapeIndexsMap(Dictionary<string, Shape> map, string prefix, CompoundShape compoundShape)
+        private void GetShapeIndexsMap(Dictionary<string, IShape> map, string prefix, CompoundShape compoundShape)
         {
             for (var index = 0; index < compoundShape.Shapes.Count; index++)
             {
@@ -110,7 +117,7 @@ namespace GraphicsEditor
             return indexs.ToArray();
         }
 
-        public Shape GetShapeByIndex(string shapeIndex)
+        public IShape GetShapeByIndex(string shapeIndex)
         {
             var indexs = GetIndexs(shapeIndex);
             if (indexs == null || !indexs.Any())

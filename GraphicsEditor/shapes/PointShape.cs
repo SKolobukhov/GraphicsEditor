@@ -1,10 +1,9 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class PointShape: Shape
+    public sealed class PointShape: IShape
     {
         public PointF Position;
 
@@ -13,12 +12,12 @@ namespace GraphicsEditor
             Position = position;
         }
 
-        public override void Draw(IDrawer drawer)
+        public void Draw(IDrawer drawer)
         {
             drawer.DrawPoint(Position);
         }
 
-        public override void Transform(Transformation transformation)
+        public void Transform(Transformation transformation)
         {
             Position = transformation[Position];
         }

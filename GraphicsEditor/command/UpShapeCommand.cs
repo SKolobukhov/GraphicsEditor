@@ -27,7 +27,7 @@ namespace GraphicsEditor
 
             try
             {
-                picture.Move(parameters[0], 1);
+                picture.Move(parameters[0], -1);
             }
             catch (Exception exception)
             {

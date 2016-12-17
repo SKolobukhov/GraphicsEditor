@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using DrawablesUI;
 
 namespace GraphicsEditor
@@ -12,12 +13,13 @@ namespace GraphicsEditor
         private const int InitialValue = 0;
         private readonly TextWriter writer;
 
-        private readonly List<int> index;
+        private readonly Stack<int> index;
 
         public TextWriterDrawer(TextWriter writer = null)
         {
             this.writer = writer ?? Console.Out;
-            index = new List<int> {InitialValue};
+            index = new Stack<int>();
+            index.Push(InitialValue);
         }
         public void SelectPen(Color color, int width = 1)
         { }
@@ -25,13 +27,13 @@ namespace GraphicsEditor
         public void DrawPoint(PointF point)
         {
             writer.WriteLine(WriteIndex() + point.ToStringPosition());
-            index[index.Count - 1]++;
+            index.Push(index.Pop() + 1);
         }
 
         public void DrawLine(PointF start, PointF end)
         {
             writer.WriteLine($"{WriteIndex()}Линия({start.ToStringPosition()}, {end.ToStringPosition()})");
-            index[index.Count - 1]++;
+            index.Push(index.Pop() + 1);
         }
 
         public void DrawEllipseArc(PointF center, SizeF sizes, float startAngle = 0, float endAngle = 360, float rotate = 0)
@@ -48,23 +50,25 @@ namespace GraphicsEditor
             {
                 writer.WriteLine($"{WriteIndex()}Дуга({center.ToStringPosition()}, {sizes.ToStringSize()}, Дуга=({startAngle}, {endAngle}), Угл поворота={rotate})");
             }
-            index[index.Count - 1]++;
+            index.Push(index.Pop() + 1);
         }
 
         private string WriteIndex()
         {
-            return "[" + string.Join(":", index).Trim(':') + "] ";
+            var result = "[" + string.Join(":", index.Reverse()).Trim(':') + "] ";
+            return result;
         }
 
         public void StartDraw()
         {
             writer.WriteLine(WriteIndex() + "Составная фигура");
-            index.Add(InitialValue);
+            index.Push(InitialValue);
         }
 
         public void EndDraw()
         {
-            index.Remove(index.Count - 1);
+            index.Pop();
+            index.Push(index.Pop() + 1);
         }
 
         public void Dispose()

@@ -4,19 +4,19 @@ using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class CompoundShape : Shape
+    public class CompoundShape : IShape
     {
         protected readonly object locker = new object();
 
-        public IList<Shape> Shapes { get; private set; }
+        public IList<IShape> Shapes { get; private set; }
 
 
-        public CompoundShape(IEnumerable<Shape> shapes = null)
+        public CompoundShape(IEnumerable<IShape> shapes = null)
         {
-            Shapes = shapes?.ToList() ?? new List<Shape>();
+            Shapes = shapes?.ToList() ?? new List<IShape>();
         }
 
-        public override void Draw(IDrawer drawer)
+        public virtual void Draw(IDrawer drawer)
         {
             lock (locker)
             {
@@ -29,7 +29,7 @@ namespace GraphicsEditor
             }
         }
 
-        public override void Transform(Transformation transformation)
+        public virtual void Transform(Transformation transformation)
         {
             lock (locker)
             {

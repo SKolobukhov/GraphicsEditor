@@ -1,10 +1,9 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class LineShape: Shape
+    public sealed class LineShape: IShape
     {
         public PointF Start;
         public PointF End;
@@ -15,12 +14,12 @@ namespace GraphicsEditor
             End = end;
         }
 
-        public override void Draw(IDrawer drawer)
+        public void Draw(IDrawer drawer)
         {
             drawer.DrawLine(Start, End);
         }
 
-        public override void Transform(Transformation transformation)
+        public void Transform(Transformation transformation)
         {
             Start = transformation[Start];
             End = transformation[End];
