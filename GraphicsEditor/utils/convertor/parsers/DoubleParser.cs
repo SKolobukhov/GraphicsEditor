@@ -9,7 +9,7 @@ namespace GraphicsEditor
         protected override double ParseParameter(string[] args)
         {
             double value;
-            if (!double.TryParse(args[0], out value))
+            if (!double.TryParse(args[0].Replace('.', ','), out value))
             {
                 throw new ApplicationException($"Неверный параметр \"{args[0]}\"");
             }
