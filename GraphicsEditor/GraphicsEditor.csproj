@@ -43,25 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="command\DownShapeCommand.cs" />
-    <Compile Include="command\UpShapeCommand.cs" />
-    <Compile Include="command\UngroupCommand.cs" />
+    <Compile Include="commands\DownShapeCommand.cs" />
+    <Compile Include="commands\UpShapeCommand.cs" />
+    <Compile Include="commands\UngroupCommand.cs" />
     <Compile Include="shapes\CompoundShape.cs" />
-    <Compile Include="command\GroupCommand.cs" />
-    <Compile Include="command\AddShapeCommand.cs" />
+    <Compile Include="commands\GroupCommand.cs" />
+    <Compile Include="commands\AddShapeCommand.cs" />
     <Compile Include="utils\CompoundShapeWrapper.cs" />
     <Compile Include="utils\convertor\Parser.cs" />
     <Compile Include="utils\ParametersProvider.cs" />
     <Compile Include="utils\ShapeWrapper.cs" />
     <Compile Include="utils\ToStringExtensions.cs" />
-    <Compile Include="command\TranslateShapeCommand.cs" />
-    <Compile Include="command\RotateShapeCommand.cs" />
-    <Compile Include="command\ScaleShapeCommand.cs" />
+    <Compile Include="commands\TranslateShapeCommand.cs" />
+    <Compile Include="commands\RotateShapeCommand.cs" />
+    <Compile Include="commands\ScaleShapeCommand.cs" />
     <Compile Include="utils\convertor\parsers\EllipseShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\LineShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\PointShapeParser.cs" />
     <Compile Include="utils\EnumerableExtensions.cs" />
-    <Compile Include="command\ListShapesCommand.cs" />
+    <Compile Include="commands\ListShapesCommand.cs" />
     <Compile Include="utils\convertor\parsers\CircleShapeParser.cs" />
     <Compile Include="utils\convertor\parsers\DoubleParser.cs" />
     <Compile Include="utils\convertor\parsers\FloatParser.cs" />
@@ -70,7 +70,7 @@
     <Compile Include="utils\convertor\parsers\PointFParser.cs" />
     <Compile Include="utils\convertor\parsers\SizeFParser.cs" />
     <Compile Include="utils\convertor\parsers\StringParser.cs" />
-    <Compile Include="command\RemoveShapeCommand.cs" />
+    <Compile Include="commands\RemoveShapeCommand.cs" />
     <Compile Include="utils\TextWriterDrawer.cs" />
     <Compile Include="shapes\CircleShape.cs" />
     <Compile Include="shapes\EllipseShape.cs" />
