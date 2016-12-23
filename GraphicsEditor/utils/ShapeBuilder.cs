@@ -4,11 +4,11 @@ using DrawablesUI;
 
 namespace GraphicsEditor
 {
-    public class ShapeProvider
+    public class ShapeBuilder
     {
         private readonly Dictionary<string, Func<string[], IShape>> bindings = new Dictionary<string, Func<string[], IShape>>();
 
-        public ShapeProvider Bind<T>(string shapeName)
+        public ShapeBuilder Bind<T>(string shapeName)
             where T : IShape
         {
             if (bindings.ContainsKey(shapeName))

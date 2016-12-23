@@ -14,12 +14,12 @@ namespace GraphicsEditor
 
         public string Name => "down";
         public string Help => "Опустить фигурy";
-        public string Description => string.Empty;
+        public string Description => "down shape1 [shape2 ...]";
         public string[] Synonyms => new string[0];
 
         public void Execute(params string[] parameters)
         {
-            if (parameters.Length != 1)
+            if (parameters.Length < 1)
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
@@ -27,11 +27,11 @@ namespace GraphicsEditor
 
             try
             {
-                picture.Move(parameters[0], 1);
+                picture.Move(1, parameters);
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"Невозможно опустить фигурy: {exception.Message}");
+                Console.WriteLine($"Невозможно опустить: {exception.Message}");
             }
         }
     }

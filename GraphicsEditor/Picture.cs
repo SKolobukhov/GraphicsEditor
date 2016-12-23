@@ -11,134 +11,119 @@ namespace GraphicsEditor
 
         public void Add(params IShape[] shapes)
         {
-            shapes.ForEach(shape => Shapes.Add(shape));
+            Shapes.AddRange(shapes);
             Changed?.Invoke();
         }
 
-        public void Transform(string shapeIndex, Transformation transformation)
+        public void Transform(Transformation transformation, params string[] shapes)
         {
-            if (!shapeIndex.StartsWith("[") || !shapeIndex.EndsWith("]"))
-            {
-                throw new ApplicationException($"Incorrect format: \"{shapeIndex}\"");
-            }
-            shapeIndex = shapeIndex.Substring(1, shapeIndex.Length - 2);
-            var shape = GetShapeByIndex(shapeIndex);
-            shape.Transform(transformation);
+            shapes
+                .Select(GetShape)
+                .ToArray()
+                .ForEach(shape => shape.Transform(transformation));
             Changed?.Invoke();
         }
 
-        public void Remove(params string[] shapeIndexs)
+        public void Remove(params string[] shapes)
         {
-            var shapeIndexsMap = GetShapeIndexsMap();
-            foreach (var shapeIndex in shapeIndexs)
+            var shapesToDelete = shapes.Select(GetShapeWithParent).ToArray();
+            foreach (var shapeWithParent in shapesToDelete)
             {
-                if (!shapeIndex.StartsWith("[") || !shapeIndex.EndsWith("]"))
+                var parent = shapeWithParent.Parent;
+                var shapeToDelete = shapeWithParent.Shape;
+                parent.Shapes.Remove(shapeToDelete);
+                while (parent.Parent != null && !parent.Shapes.Any())
                 {
-                    throw new ApplicationException($"Incorrect format: \"{shapeIndex}\"");
+                    shapeToDelete = parent.Shape;
+                    parent = parent.Parent;
+                    parent.Shapes.Remove(shapeToDelete);
                 }
-                var index = shapeIndex.Substring(1, shapeIndex.Length - 2);
-                if (!shapeIndexsMap.ContainsKey(index))
-                {
-                    throw new ApplicationException($"Shape by index \"{shapeIndex}\" not found");
-                }
-                var shapeToDelete = shapeIndexsMap[index];
-                var lastSeparatorIndex = index.LastIndexOf(":", StringComparison.OrdinalIgnoreCase);
-                index = lastSeparatorIndex != -1 ? index.Substring(0, lastSeparatorIndex) : string.Empty;
-                var compoundShape = (CompoundShape)shapeIndexsMap[index];
-                compoundShape.Shapes.Remove(shapeToDelete);
             }
             Changed?.Invoke();
         }
 
-        public void Move(string shapeIndex, int offset)
+        public void Move(int offset, params string[] shapes)
         {
-            if (!shapeIndex.StartsWith("[") || !shapeIndex.EndsWith("]"))
+            var shapesToMove = shapes.Select(GetShapeWithParent);
+	        if (offset <= 0)
+	        {
+		        shapesToMove = shapesToMove.OrderBy(shape =>
+		        {
+			        var index = shape.GetIndex();
+			        return index.Substring(1, index.Length - 2);
+		        });
+	        }
+	        else
+	        {
+		        shapesToMove = shapesToMove.OrderByDescending(shape =>
+		        {
+			        var index = shape.GetIndex();
+			        return index.Substring(1, index.Length - 2);
+		        });
+	        }
+            foreach (var shapeWithParent in shapesToMove.ToArray())
             {
-                throw new ApplicationException($"Incorrect format: \"{shapeIndex}\"");
-            }
-            shapeIndex = shapeIndex.Substring(1, shapeIndex.Length - 2);
-            var shape = GetShapeByIndex(shapeIndex);
-            var lastSeparatorIndex = shapeIndex.LastIndexOf(":", StringComparison.OrdinalIgnoreCase);
-            shapeIndex = lastSeparatorIndex != -1 ? shapeIndex.Substring(0, lastSeparatorIndex) : string.Empty;
-            var compoundShape = (CompoundShape)GetShapeByIndex(shapeIndex);
-            var index = compoundShape.Shapes.IndexOf(shape) + offset;
-            compoundShape.Shapes.Remove(shape);
-            index = Math.Max(0, Math.Min(compoundShape.Shapes.Count, index));
-            if (compoundShape.Shapes.Count == index)
-            {
-                compoundShape.Shapes.Add(shape);
-            }
-            else
-            {
-                compoundShape.Shapes.Insert(index, shape);
+                var index = shapeWithParent.Parent.Shapes.IndexOf(shapeWithParent.Shape) + offset;
+                shapeWithParent.Parent.Shapes.Remove(shapeWithParent.Shape);
+                index = Math.Max(0, Math.Min(shapeWithParent.Parent.Shapes.Count, index));
+                if (shapeWithParent.Parent.Shapes.Count == index)
+                {
+                    shapeWithParent.Parent.Shapes.Add(shapeWithParent.Shape);
+                }
+                else
+                {
+                    shapeWithParent.Parent.Shapes.Insert(index, shapeWithParent.Shape);
+                }
             }
             Changed?.Invoke();
         }
 
-        private Dictionary<string, IShape> GetShapeIndexsMap()
+        public IShape GetShape(string shape)
         {
-            var result = new Dictionary<string, IShape> { { string.Empty, this } };
-            GetShapeIndexsMap(result, string.Empty, this);
-            return result;
+            return GetShapeWithParent(shape).Shape;
         }
 
-        private void GetShapeIndexsMap(Dictionary<string, IShape> map, string prefix, CompoundShape compoundShape)
+        public ShapeWrapper GetShapeWithParent(string shape)
         {
-            for (var index = 0; index < compoundShape.Shapes.Count; index++)
+            var index = GetIndex(shape);
+            if (index == null || !index.Any())
             {
-                var path = prefix + (string.IsNullOrEmpty(prefix) ? string.Empty : ":") + index;
-                var shape = compoundShape.Shapes[index];
-                map.Add(path, shape);
-                var cShape = shape as CompoundShape;
-                if (cShape != null)
-                {
-                    GetShapeIndexsMap(map, path, cShape);
-                }
+                return null;
             }
+            var parent = new CompoundShapeWrapper(this, null);
+            for (var level = 0; level < index.Length - 1; level++)
+            {
+                if (parent.Shape == null || index[level] < 0 || index[level] >= parent.Shapes.Count)
+                {
+                    throw new ApplicationException($"Shape \"{shape}\" not found");
+                }
+                parent = new CompoundShapeWrapper(parent.Shapes[index[level]] as CompoundShape, parent);
+            }
+            if (parent.Shape == null || index[index.Length - 1] < 0 || index[index.Length - 1] >= parent.Shapes.Count)
+            {
+                throw new ApplicationException($"Shape \"{shape}\" not found");
+            }
+            return new ShapeWrapper(parent.Shapes[index[index.Length - 1]], parent);
         }
 
-        private int[] GetIndexs(string shapeIndex)
+        private int[] GetIndex(string shape)
         {
-            if (string.IsNullOrEmpty(shapeIndex) || shapeIndex == "[]")
+            if (string.IsNullOrWhiteSpace(shape) || shape == "[]")
             {
-                return new int[0];
+                return null;
             }
-            var args = shapeIndex.TrimStart('[').TrimEnd(']').Split(':');
-            var indexs = new List<int>();
-            foreach (var arg in args)
+            try
             {
-                int index;
-                if (!int.TryParse(arg, out index))
-                {
-                    throw new ApplicationException($"Failed to parse index \"{shapeIndex}\"");
-                }
-                indexs.Add(index);
+                return shape
+                    .Substring(1, shape.Length - 2)
+                    .Split(':')
+                    .Select(int.Parse)
+                    .ToArray();
             }
-            return indexs.ToArray();
-        }
-
-        public IShape GetShapeByIndex(string shapeIndex)
-        {
-            var indexs = GetIndexs(shapeIndex);
-            if (indexs == null || !indexs.Any())
+            catch (Exception exception)
             {
-                return this;
+                throw new ApplicationException($"Failed to parse index \"{shape}\": {exception.Message}", exception);
             }
-            CompoundShape compoundShape = this;
-            for (var level = 0; level < indexs.Length - 1; level++)
-            {
-                if (compoundShape == null || indexs[level] < 0 || indexs[level] >= compoundShape.Shapes.Count)
-                {
-                    throw new ApplicationException($"Shape by index \"{shapeIndex}\" not found");
-                }
-                compoundShape = compoundShape.Shapes[indexs[level]] as CompoundShape;
-            }
-            var index = indexs[indexs.Length - 1];
-            if (compoundShape == null || index < 0 || index >= compoundShape.Shapes.Count)
-            {
-                throw new ApplicationException($"Shape by index \"{shapeIndex}\" not found");
-            }
-            return compoundShape.Shapes[index];
         }
 
         public override void Draw(IDrawer drawer)
@@ -151,5 +136,9 @@ namespace GraphicsEditor
                 }
             }
         }
+
+        public Picture() 
+            : base(new List<IShape>())
+        { }
     }
 }

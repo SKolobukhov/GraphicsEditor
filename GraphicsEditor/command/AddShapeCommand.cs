@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using ConsoleUI;
 
 namespace GraphicsEditor
@@ -7,17 +6,17 @@ namespace GraphicsEditor
     public class AddShapeCommand : ICommand
     {
         private readonly Picture picture;
-        private readonly ShapeProvider shapeProvider;
+        private readonly ShapeBuilder shapeBuilder;
 
-        public AddShapeCommand(Picture picture, ShapeProvider shapeProvider)
+        public AddShapeCommand(Picture picture, ShapeBuilder shapeBuilder)
         {
             this.picture = picture;
-            this.shapeProvider = shapeProvider;
+            this.shapeBuilder = shapeBuilder;
         }
 
         public string Name => "add";
         public string Help => "Добавление фигуры на картину";
-        public string Description => string.Empty;
+        public string Description => "add shapeName arg1 [arg2 ...]";
         public string[] Synonyms => new[] { "+" };
 
         public void Execute(params string[] parameters)
@@ -28,11 +27,11 @@ namespace GraphicsEditor
                 return;
             }
 
-            var shapeName = parameters.First();
-            parameters = parameters.Skip(1).ToArray();
+            var parametersProvider = new ParametersProvider(parameters);
+            var shapeName = parametersProvider.GetParameter();
             try
             {
-                var shape = shapeProvider.GetShape(shapeName, parameters);
+                var shape = shapeBuilder.GetShape(shapeName, parametersProvider.RemainingParameters());
                 picture.Add(shape);
             }
             catch (Exception exception)

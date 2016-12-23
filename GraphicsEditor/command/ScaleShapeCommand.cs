@@ -2,7 +2,6 @@
 using DrawablesUI;
 using System;
 using System.Drawing;
-using System.Linq;
 
 namespace GraphicsEditor
 {
@@ -17,12 +16,12 @@ namespace GraphicsEditor
 
         public string Name => "scale";
         public string Help => "Масштабирование фигуры";
-        public string Description => string.Empty;
+        public string Description => "scale x y factor shape1 [shape2 ...]";
         public string[] Synonyms => new[] { "sc", "zoom" };
 
         public void Execute(params string[] parameters)
         {
-            if (parameters.Length != 4)
+            if (parameters.Length < 4)
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
@@ -30,11 +29,11 @@ namespace GraphicsEditor
             
             try
             {
-                var scalePoint = Convertor.Convert<PointF>(parameters.Take(2).ToArray());
-                var scaleFactor = Convertor.Convert<float>(parameters.Skip(2).Take(1).ToArray());
-                var shapeIndex = parameters.Last();
+				var parametersProvider = new ParametersProvider(parameters);
+                var scalePoint = Convertor.Convert<PointF>(parametersProvider.GetParameters(2));
+                var scaleFactor = Convertor.Convert<float>(parametersProvider.GetParameters(1));
                 var transformation = Transformation.Scale(scalePoint, scaleFactor);
-                picture.Transform(shapeIndex, transformation);
+                picture.Transform(transformation, parametersProvider.RemainingParameters());
             }
             catch (Exception exception)
             {

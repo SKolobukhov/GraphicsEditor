@@ -15,12 +15,12 @@ namespace GraphicsEditor
 
         public string Name => "ungroup";
         public string Help => "Разгруппировка фигуры";
-        public string Description => string.Empty;
+        public string Description => "ungroup group1 [group2 ...]";
         public string[] Synonyms => new string[0];
 
         public void Execute(params string[] parameters)
         {
-            if (parameters.Length != 1)
+            if (parameters.Length < 1)
             {
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
@@ -28,13 +28,28 @@ namespace GraphicsEditor
 
             try
             {
-                var compoundShape = picture.GetShapeByIndex(parameters[0]) as CompoundShape;
-                if (compoundShape == null)
-                {
-                    throw new ApplicationException($"Выбранная фигура({parameters[0]}) - не составная");
-                }
-                picture.Remove(parameters[0]);
-                picture.Add(compoundShape.Shapes.ToArray());
+	            var shapes = parameters
+					.Select(shape =>
+		            {
+			            var shapeWithParent = picture.GetShapeWithParent(shape);
+						var compoundShape = shapeWithParent.Shape as CompoundShape;
+						if (compoundShape == null)
+						{
+							throw new ApplicationException($"Выбранная фигура({shape}) - не составная");
+						}
+			            return new CompoundShapeWrapper(compoundShape, shapeWithParent.Parent);
+		            })
+					.OrderByDescending(shape =>
+					{
+						var index = shape.GetIndex();
+						return index.Substring(1, index.Length - 2);
+					})
+					.ToArray();
+	            foreach (var shapeWithParent in shapes)
+	            {
+		            shapeWithParent.Parent.Shapes.Remove(shapeWithParent.Shape);
+		            shapeWithParent.Parent.Shapes.AddRange(shapeWithParent.Shapes.ToArray());
+	            }
             }
             catch (Exception exception)
             {

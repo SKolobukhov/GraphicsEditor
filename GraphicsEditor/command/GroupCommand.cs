@@ -15,7 +15,7 @@ namespace GraphicsEditor
 
         public string Name => "group";
         public string Help => "Группировка фигур";
-        public string Description => string.Empty;
+        public string Description => "group shape1 [shape2 ...]";
         public string[] Synonyms => new string[0];
 
         public void Execute(params string[] parameters)
@@ -28,7 +28,7 @@ namespace GraphicsEditor
 
             try
             {
-                var shapes = parameters.Select(parameter => picture.GetShapeByIndex(parameter));
+                var shapes = parameters.Select(picture.GetShape).ToList();
                 var group = new CompoundShape(shapes);
                 picture.Remove(parameters);
                 picture.Add(group);

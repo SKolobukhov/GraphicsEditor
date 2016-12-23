@@ -14,7 +14,7 @@ namespace GraphicsEditor
 
         public string Name => "list";
         public string Help => "Выводит список фигур на картинке.";
-        public string Description => string.Empty;
+        public string Description => "list";
         public string[] Synonyms => new[] { "ls" };
 
         public void Execute(params string[] parameters)

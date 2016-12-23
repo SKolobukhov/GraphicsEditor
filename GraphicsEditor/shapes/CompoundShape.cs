@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DrawablesUI;
 
 namespace GraphicsEditor
@@ -8,12 +7,12 @@ namespace GraphicsEditor
     {
         protected readonly object locker = new object();
 
-        public IList<IShape> Shapes { get; private set; }
+        public List<IShape> Shapes { get; private set; }
 
 
-        public CompoundShape(IEnumerable<IShape> shapes = null)
+        public CompoundShape(List<IShape> shapes)
         {
-            Shapes = shapes?.ToList() ?? new List<IShape>();
+            Shapes = shapes ?? new List<IShape>();
         }
 
         public virtual void Draw(IDrawer drawer)

@@ -11,7 +11,7 @@ namespace GraphicsEditor
             var ui = new DrawableGUI(picture);
             var app = new Application();
 
-            var shapeProvider = new ShapeProvider()
+            var shapeProvider = new ShapeBuilder()
                 .Bind<PointShape>("point")
                 .Bind<LineShape>("line")
                 .Bind<EllipseShape>("ellipse")
