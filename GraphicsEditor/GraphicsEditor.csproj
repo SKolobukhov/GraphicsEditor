@@ -43,10 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="commands\AddAliasCommand.cs" />
     <Compile Include="commands\DownShapeCommand.cs" />
     <Compile Include="commands\UpShapeCommand.cs" />
     <Compile Include="commands\UngroupCommand.cs" />
+    <Compile Include="commands\AddAliasCommand.cs" />
     <Compile Include="shapes\CompoundShape.cs" />
     <Compile Include="commands\GroupCommand.cs" />
     <Compile Include="commands\AddShapeCommand.cs" />
