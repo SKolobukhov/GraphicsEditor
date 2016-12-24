@@ -19,12 +19,10 @@ namespace GraphicsEditor
         {
             lock (locker)
             {
-                drawer.StartDraw();
                 foreach (var shape in Shapes)
                 {
                     shape.Draw(drawer);
                 }
-                drawer.EndDraw();
             }
         }
 

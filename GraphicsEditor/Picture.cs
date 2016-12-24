@@ -11,6 +11,25 @@ namespace GraphicsEditor
 		private readonly Dictionary<string, IShape> aliasMap = new Dictionary<string, IShape>();
 		private readonly Dictionary<string, string> aliasCache = new Dictionary<string, string>();
 
+
+		public void Print()
+		{
+			var writer = Console.Out;
+			var map = GetShapesMap();
+			foreach (var pair in map)
+			{
+				var aliases = aliasMap.Where(p => p.Value == pair.Value).Select(p => p.Key).ToArray();
+				if (pair.Value is CompoundShape)
+				{
+					new TextWriterDrawer(pair.Key, aliases, writer).DrawCompoundShape();
+				}
+				else
+				{
+					pair.Value.Draw(new TextWriterDrawer(pair.Key, aliases, writer));
+				}
+			}
+		}
+
 		public void Alias(string shape, string alias)
 		{
 			if (aliasMap.ContainsKey(alias))
@@ -187,6 +206,7 @@ namespace GraphicsEditor
 			foreach (var shape in compoundShape.Shapes)
 			{
 				i++;
+				shapesMap[prefix + ":" + i] = shape;
 				var cShape = shape as CompoundShape;
 				if (cShape != null)
 				{
@@ -196,7 +216,6 @@ namespace GraphicsEditor
 						return result;
 					}
 				}
-				shapesMap[prefix + ":" + i] = shape;
 			}
 			return null;
 		}

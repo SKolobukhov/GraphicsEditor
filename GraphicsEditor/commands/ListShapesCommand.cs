@@ -24,8 +24,7 @@ namespace GraphicsEditor
                 Console.WriteLine($"Неверное количество параметров: {parameters.Length}");
                 return;
             }
-
-            picture.Draw(new TextWriterDrawer());
+			picture.Print();
         }
     }
 }
